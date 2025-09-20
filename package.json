@@ -1,0 +1,29 @@
+{
+  "name": "expressapirest",
+  "version": "1.0.0",
+  "description": "Apirest con express, orm y mysql",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node ./server/server.js",
+    "dev": "nodemon ./server/server.js"
+  },
+  "keywords": [
+    "apirest"
+  ],
+  "author": "Pempi",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "dotenv": "^17.2.2",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mariadb": "^3.4.5",
+    "mysql2": "^3.15.0",
+    "sequelize": "^6.37.7",
+    "timeago.js": "^4.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}

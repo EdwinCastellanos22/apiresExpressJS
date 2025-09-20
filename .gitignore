@@ -1,0 +1,9 @@
+# Entornos virtuales
+Interfaz/env/
+Interfaz/.env
+.env
+
+# Node
+node_modules/
+# Ignorar package-lock.json solo si realmente quieres
+# package-lock.json

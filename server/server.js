@@ -18,6 +18,15 @@ server.use("/api/profile", verifyToken, (req, res) => {
   });
 });
 
+//ruta para probar el token si es valido aun.
+server.use("/api/status", verifyToken, (req, res) => {
+  res.status(200).json({
+    "message": "servidor funcionando",
+    "token": "valido",
+    "fecha": new Date().getTime() 
+  })
+});
+
 //conectar a bd y up server
 sequelize.sync()
 .then(() =>{

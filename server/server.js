@@ -2,14 +2,21 @@ const express = require('express');
 const sequelize = require("../database/config-db");
 const routes = require("../routes/routes");
 const productRoutes = require("../routes/productRoutes");
+const cartRoutes= require("../routes/cart-route");
 const verifyToken = require("../middleware/auth");
 require('dotenv').config()
+
+const { swaggerUi, specs } = require("../docs/config");
+
 
 const server = express();
 server.use(express.json());
 
 //------- Rutas publicas sin jwt
 server.use("/api", routes);
+
+//swaggerUI
+server.use("/api/docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 //Rutas protegidas
 server.use("/api/profile", verifyToken, (req, res) => {
@@ -32,6 +39,10 @@ server.use("/api/status", verifyToken, (req, res) => {
   })
 });
 //-------------------------------------
+
+//------ Rutas Carrito ------------
+server.use("/api/cart", cartRoutes);
+// -------------------------------
 
 //----------------- conectar a bd y up server
 sequelize.sync()

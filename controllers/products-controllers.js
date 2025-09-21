@@ -3,14 +3,8 @@ const Product = require("../models/products-model");
 //create product
 exports.createProduct = async (req,res) => {
     try{
-        const user = req.user;
-        if (user.role != 'admin'){
-            return res.status(401).json({
-                error: "Usuario no autorizado!"
-            })
-        }
-        const { name, description, price} = req.body;
-        const newProduct = await Product.create({ name, description, price});
+        const { name, description, price, category, stock, status, imageUrl } = req.body;
+        const newProduct = await Product.create({ name, description, price, category, stock, status, imageUrl });
         res.status(201).json({
             "message": "producto creado con exito",
             product: newProduct
@@ -57,12 +51,6 @@ exports.getProductById = async (req, res) => {
 //update product
 exports.updateProduct = async(req, res) => {
     try{
-        const user = req.user;
-        if (user.role != 'admin'){
-            return res.status(401).json({
-                error: "Usuario no autorizado!"
-            })
-        }
         const {id} = req.params;
         const { name, description, price, stock, category, imageUrl, status } = req.body;
 
@@ -85,12 +73,6 @@ exports.updateProduct = async(req, res) => {
 //delete product
 exports.deleteProduct = async (req, res) => {
   try {
-    const user = req.user;
-    if (user.role != 'admin'){
-        return res.status(401).json({
-            error: "Usuario no autorizado!"
-        })
-    }
     const { id } = req.params;
 
     const product = await Product.findByPk(id);

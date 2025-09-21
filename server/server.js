@@ -1,13 +1,14 @@
 const express = require('express');
-const sequelize = require("../database/config");
+const sequelize = require("../database/config-db");
 const routes = require("../routes/routes");
+const productRoutes = require("../routes/productRoutes");
 const verifyToken = require("../middleware/auth");
 require('dotenv').config()
 
 const server = express();
 server.use(express.json());
 
-//Rutas publicas sin jwt
+//------- Rutas publicas sin jwt
 server.use("/api", routes);
 
 //Rutas protegidas
@@ -17,6 +18,10 @@ server.use("/api/profile", verifyToken, (req, res) => {
     usuario: req.user
   });
 });
+//-------------------------------
+
+//---- Rutas Productos ------
+server.use("/api/products", productRoutes);
 
 //ruta para probar el token si es valido aun.
 server.use("/api/status", verifyToken, (req, res) => {
@@ -26,8 +31,9 @@ server.use("/api/status", verifyToken, (req, res) => {
     "fecha": new Date().getTime() 
   })
 });
+//-------------------------------------
 
-//conectar a bd y up server
+//----------------- conectar a bd y up server
 sequelize.sync()
 .then(() =>{
   console.log("BD READY!!")
@@ -42,3 +48,4 @@ sequelize.sync()
   '%cError en conexion a DB!' ,
   'color: #ae4416ff; font-family: sans-serif; text-decoration: underline;', err
 ));
+//----------------------------------------

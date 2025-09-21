@@ -1,4 +1,4 @@
-const User = require("../models/user");
+const User = require("../models/users-model");
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { format } = require('timeago.js');
@@ -8,12 +8,12 @@ require('dotenv').config();
 exports.register = async (req, res) => {
     try {
 
-        const { name, email, password, password2 } = req.body;
+        const { username, email, password, password2 } = req.body;
         const hashedPasswd = await bcrypt.hash(password, 10);
 
         if (password == password2) {
             const newUser = await User.create({
-                name, email, password : hashedPasswd
+                username, email, password : hashedPasswd
             });
             res.status(201).json({
                 "message": "Ususario creado exitosamente!", usuario: newUser
@@ -57,7 +57,7 @@ exports.login = async (req, res) => {
             });
         }
 
-        const token = jwt.sign({ id: user.id, email: user.email}, process.env.JWT_SECRET, { expiresIn: '1h'});
+        const token = jwt.sign({ id: user.id, email: user.email, username: user.username, role: user.role, status: user.status}, process.env.JWT_SECRET, { expiresIn: '1h'});
         res.json({
             "message": "Login Exitoso", token
         });

@@ -3,8 +3,8 @@ const Product = require("../models/products-model");
 //create product
 exports.createProduct = async (req,res) => {
     try{
-        const { name, description, price, category, stock, status, imageUrl } = req.body;
-        const newProduct = await Product.create({ name, description, price, category, stock, status, imageUrl });
+        const { name, description, price, category, stock, status } = req.body;
+        const newProduct = await Product.create({ name, description, price, category, stock, status });
         res.status(201).json({
             "message": "producto creado con exito",
             product: newProduct
@@ -21,9 +21,22 @@ exports.createProduct = async (req,res) => {
 //list of products
 exports.getProducts = async (req, res) => {
     try{
-        const products= await Product.findAll();
+
+        const page = parseInt(req.query.page) || 1
+        const limit = parseInt(req.query.limit) || 10;
+
+        const offset = (page -1) * limit;
+
+        const { count, rows}= await Product.findAndCountAll({
+            offset,
+            limit
+        });
         res.status(200).json({
-            products
+            page,
+            limit,
+            total: count,
+            totalPages: Math.ceil(count / limit),
+            products: rows
         });
     }
     catch (e){

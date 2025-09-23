@@ -3,6 +3,7 @@ const sequelize = require("../database/config-db");
 const routes = require("../routes/routes");
 const productRoutes = require("../routes/productRoutes");
 const cartRoutes= require("../routes/cart-route");
+const uploadRoutes = require("../routes/uploadFile");
 const verifyToken = require("../middleware/auth");
 require('dotenv').config()
 
@@ -10,6 +11,7 @@ const { swaggerUi, specs } = require("../docs/config");
 
 
 const server = express();
+server.use(express.urlencoded({ extended: true }))
 server.use(express.json());
 
 //------- Rutas publicas sin jwt
@@ -26,6 +28,10 @@ server.use("/api/profile", verifyToken, (req, res) => {
   });
 });
 //-------------------------------
+
+// --- Upload routes ----
+server.use("/upload", uploadRoutes);
+//---------------------------
 
 //---- Rutas Productos ------
 server.use("/api/products", productRoutes);

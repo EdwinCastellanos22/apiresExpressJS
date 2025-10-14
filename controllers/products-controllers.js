@@ -99,3 +99,35 @@ exports.deleteProduct = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+
+//get data info products
+exports.getProductInfo = async (req, res) => {
+  try {
+    const products = await Product.findAll();
+    const categories = {};
+    const totalProducts = products.length;
+
+    products.forEach((product) => {
+      const category = product.category;
+      if (categories[category]) {
+        categories[category]++;
+      } else {
+        categories[category] = 1;
+      }
+    });
+
+    const totalCategories = Object.keys(categories).length;
+
+    res.status(200).json({
+      totalCategories,
+      categories,
+      totalProducts,
+      products,
+    });
+  } catch (e) {
+    res.status(500).json({
+      error: e.message,
+    });
+  }
+};

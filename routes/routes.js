@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const {register, login} = require("../controllers/user-controller");
+const {register, login, getAllUsers} = require("../controllers/user-controller");
+const verifyToken = require("../middleware/auth");
+const rolStatus = require("../middleware/rol-status");
 
 /**
  * @swagger
@@ -77,5 +79,28 @@ router.post("/login", login);
  *       500:
  *         description: Error en el servidor
  */
+
+
+router.get("/users", verifyToken, rolStatus('admin', 'active'), getAllUsers);
+/**
+ * @swagger
+ * /users:
+ *   get:
+ *     summary: Obtener todos los usuarios (solo administradores)
+ *     tags: [Authentication]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Solicitud correcta
+ *       401:
+ *         description: No autorizado
+ *       403:
+ *         description: Prohibido
+ *       500:
+ *         description: Error en el servidor
+ */
+
+
 
 module.exports = router;

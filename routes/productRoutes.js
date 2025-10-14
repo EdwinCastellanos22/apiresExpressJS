@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { createProduct, getProducts, getProductById, updateProduct, deleteProduct} = require("../controllers/products-controllers");
+const { createProduct, getProducts, getProductById, updateProduct, deleteProduct, getProductInfo} = require("../controllers/products-controllers");
 const auth = require("../middleware/auth")
 const roleStatus = require("../middleware/rol-status");
 
@@ -81,6 +81,7 @@ router.get("/", getProducts);
 router.get("/:id", getProductById);
 router.put("/:id", auth, roleStatus("admin", "active"), updateProduct);
 router.delete("/:id", auth, roleStatus("admin", "active"), deleteProduct)
+router.post("/info", auth, roleStatus("admin", "active"), getProductInfo);
 
 
 module.exports = router;

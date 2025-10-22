@@ -14,7 +14,7 @@ exports.register = async (req, res) => {
 
         if (password == password2) {
             const newUser = await User.create({
-                username, email, password : hashedPasswd
+                username, email, password: hashedPasswd
             });
             res.status(201).json({
                 "message": "Ususario creado exitosamente!", usuario: newUser
@@ -45,22 +45,29 @@ exports.login = async (req, res) => {
 
     try {
         const { email, password } = req.body;
-        const user= await User.findOne({where: {email}});
 
-        if(!user){
+        if (!email || !password) {
+            return res.status(400).json({
+                error: "Faltan las credenciales ('username', 'password')"
+            });
+        }
+
+        const user = await User.findOne({ where: { email } });
+
+        if (!user) {
             return res.status(404).json({
                 "error": "Usuario no encontrado"
             });
         }
 
         const validPass = await bcrypt.compare(password, user.password);
-        if (!validPass){
+        if (!validPass) {
             return res.status(401).json({
                 "error": "Contraseña Invalida"
             });
         }
 
-        const token = jwt.sign({ id: user.id, email: user.email, username: user.username, role: user.role, status: user.status}, process.env.JWT_SECRET, { expiresIn: '24h'});
+        const token = jwt.sign({ id: user.id, email: user.email, username: user.username, role: user.role, status: user.status }, process.env.JWT_SECRET, { expiresIn: '24h' });
         res.status(200).json({
             token, user
         });
@@ -86,7 +93,7 @@ exports.getAllUsers = async (req, res) => {
     try {
         const users = await User.findAll();
         users.forEach(user => {
-            user.password = "aG9sYSB0cm9sbyEKaG9sYSB0cm9sbyEKaG9sYSB0cm9sbyEKaG9sYSB0cm9sbyEK123"; 
+            user.password = "aG9sYSB0cm9sbyEKaG9sYSB0cm9sbyEKaG9sYSB0cm9sbyEKaG9sYSB0cm9sbyEK123";
         });
         res.status(200).json(users);
     }
